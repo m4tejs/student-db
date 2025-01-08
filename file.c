@@ -37,7 +37,7 @@ int data_save( int count, struct student *s, const char *file ) {
 struct student *data_read( const char *file, int *count ){
 	int fd;
 	ssize_t br = 0;
-	*count = 1;
+	*count = 0;
 	struct student *data = NULL;
 
 	printf("count is %d\n", *count);
@@ -45,15 +45,13 @@ struct student *data_read( const char *file, int *count ){
 	if ( !file )
 		return data;
 
-	printf("Data file is %s\n", file);
-
 	fd = open( file, O_RDWR, 0600 );
 	if ( fd < 0 ){
 		printf("Error opening file is %d ($m)\n", fd);
 		return data;
 		}
 	else
-		printf("File decscriptor is %d", fd);
+		printf("File decscriptor is %d\n", fd);
 
 	data  = (struct student *)malloc( sizeof(struct student) );
 	if ( !data )
@@ -61,13 +59,18 @@ struct student *data_read( const char *file, int *count ){
 
 	while( 1 ){
 		br = read( fd, data + *count, sizeof(struct student) );
-		if ( br < sizeof(struct student) )
+		printf("Read %lu bytes\n", br);
+		if ( br != sizeof(struct student) )
 			break;
-		*count++;
+		(*count)++;
+		printf("count is %d\n", *count );
 		data = (struct student *)realloc( data, sizeof(struct student) * (*count + 1) );
-		if ( !data )
+		if ( !data ){
+			printf("Realloc failed\n");
 			break;
+		}
 	}
+
 
 exit:
 	close(fd);
