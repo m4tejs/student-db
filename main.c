@@ -33,7 +33,7 @@ int main() {
 		return 0;
 	}
 
-	printf("Please enter number of students: ");
+	printf("Please enter number of students:\n ");
 	scanf("%d", &c);
 
 	s = (struct student *)malloc( sizeof(struct student) * c);
